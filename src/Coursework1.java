@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 public class Coursework1 {
     final static int ARRAYLENGTH = 100;
-    final static int TERMINATINGINT = 0;
+    final static int SENTINEL = 0;
 
     public static void main(String[] args) {
         int[] array1 = fillArray(ARRAYLENGTH);
@@ -54,11 +54,11 @@ public class Coursework1 {
         int i = 0;
 
         Scanner in = new Scanner(System.in);
-        System.out.println("Please enter up to " + arrayLength + " unique integer(s), and " + TERMINATINGINT + " when finished: ");
+        System.out.println("Please enter up to " + arrayLength + " unique integer(s), and " + SENTINEL + " when finished: ");
 
         while (i < (maxArray.length)) {
             input = in.nextInt();
-            if (input != TERMINATINGINT) {
+            if (input != SENTINEL) {
                 if (!dupeInput(input, maxArray)) {
                     maxArray[i] = input;
                     i++;
@@ -104,7 +104,7 @@ public class Coursework1 {
         int size = 0;
 
         for(int element : longArray){
-            if (element != TERMINATINGINT){
+            if (element != SENTINEL){
                 size++;
             }
         }
@@ -157,12 +157,10 @@ public class Coursework1 {
 
         for(int i : array1){
             for(int j : array2){
-                if(i == j){
-                    if (!dupeInput(i, maxArray)) { //single && loop?
-                        if (k < maxArray.length) {
-                            maxArray[k] = j;
-                            k++;
-                        }
+                if(i == j && !dupeInput(i, maxArray)){
+                    if (k < maxArray.length) {
+                        maxArray[k] = j;
+                        k++;
                     }
                 }
             }

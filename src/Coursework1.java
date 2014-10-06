@@ -1,21 +1,38 @@
 /**
- * Created by abby on 06/10/2014.
+ * @author Abby Sassel
+ * @since 06/10/2014
+ *
+ * Given two arrays of integers, Coursework1 program performs the necessary array operations to print:
+ *  - the values which occur in both arrays
+ *  - those which occur only in the first array
+ *  - and those which occur only in the second.
+ *
+ * (NB: Some material taken from draft version on 01/10/2014, at author's personal Github account
+ * https://github.com/sassela/asasse01-sp2-cw1-2014. This version is for historical validation only, not to be marked.)
+ *
  */
 
 import java.util.Scanner;
 
 public class Coursework1 {
+    final static int ARRAYLENGTH = 100;
+    final static int TERMINATINGINT = 0;
 
     public static void main(String[] args) {
-        int[] array1 = fillArray(10);
-        int[] array2 = fillArray(10);
+        int[] array1 = fillArray(ARRAYLENGTH);
+        int[] array2 = fillArray(ARRAYLENGTH);
         int[] commonData = compareCommon(array1, array2);
+        int[] uniqueData1 = compareUnique(array1, array2);
+        int[] uniqueData2 = compareUnique(array2, array1);
+
 
         printResultArray("Array 1 values: ", array1);
         printResultArray("Array 2 values: ", array2);
-        printResultArray("Common data is: ", commonData);
-        System.out.println("Number of common data is: " + commonData.length);
-
+        printResultArray("Common data: ", commonData);
+        System.out.println("Number of common data: " + commonData.length);
+        printResultArray("Unique values for array 1: ", uniqueData1);
+        printResultArray("Unique values for array 2: ", uniqueData2);
+;
 
     }
 
@@ -31,11 +48,11 @@ public class Coursework1 {
         int i = 0;
 
         Scanner in = new Scanner(System.in);
-        System.out.println("Please enter up to " + arrayLength + " unique integer(s), and 0 when finished: "); //remove magic num
+        System.out.println("Please enter up to " + arrayLength + " unique integer(s), and " + TERMINATINGINT + " when finished: ");
 
         while (i < (maxArray.length)) {
             input = in.nextInt();
-            if (input != 0) {
+            if (input != TERMINATINGINT) {
                 if (!dupeInput(input, maxArray)) {
                     maxArray[i] = input;
                     i++;
@@ -53,11 +70,11 @@ public class Coursework1 {
 
     /**
      * dupeInput method checks to see whether input integer is already in the array
-     * @param input integer input to search for in array
+     * @param input integer to search for in array
      * @param array array to search
      * @return boolean value indicating presence of integer in array
      */
-    public static boolean dupeInput(int input, int[] array){
+    public static boolean dupeInput(int input, int[] array) {
         boolean duplicate = false;
 
         for(int i : array){
@@ -72,16 +89,16 @@ public class Coursework1 {
 
     /**
      * fitArray method copies elements from original array into new array with length corresponding to number of
-     * elements not equal to 0.
+     * integer elements not equal to 0.
      * avoids use of Arrays class, as required in coursework brief
-     * @param longArray array to be copied
-     * @return fitArray array with required number of indices
+     * @param longArray integer array to be copied
+     * @return fitArray integer array with exact number of indices required
      */
     private static int[] fitArray(int[] longArray) {
         int size = 0;
 
         for(int element : longArray){
-            if (element != 0){ //remove magic num
+            if (element != TERMINATINGINT){
                 size++;
             }
         }
@@ -94,12 +111,12 @@ public class Coursework1 {
 
 
     /**
-     * printResultArray method fills array with user input, returns array
+     * printResultArray method creates a String of array elements and prints
      * avoids use of Arrays class, as required in coursework brief
      * @param description description of array
-     * @param array array to print
+     * @param array integer array to convert to String
      */
-    private static void printResultArray(String description, int[] array){
+    private static void printResultArray(String description, int[] array) {
         String resultString = "";
 
         for(int element : array){
@@ -109,8 +126,14 @@ public class Coursework1 {
         System.out.println(description + resultString);
     }
 
-    //tesing
-    private static int[] compareCommon(int[] array1, int[] array2){ //fix common
+
+    /**
+     * compareCommon method compares two arrays and returns single array of common elements
+     * @param array1 one of two integer arrays to compare
+     * @param array2 one of two integer arrays to compare
+     * @return common array of common integer elements
+     */
+    private static int[] compareCommon(int[] array1, int[] array2) {
         int arrayLength;
         int k = 0;
 
@@ -122,7 +145,7 @@ public class Coursework1 {
         for(int i : array1){
             for(int j : array2){
                 if(i == j){
-                    if (!dupeInput(i, maxArray)) {
+                    if (!dupeInput(i, maxArray)) { //single && loop?
                         if (k < maxArray.length) {
                             maxArray[k] = j;
                             k++;
@@ -130,18 +153,49 @@ public class Coursework1 {
                     }
                 }
             }
-
         }
 
         int[] common = fitArray(maxArray);
 
         return common;
+    }
 
-        //printResultArray("Common: ", common);
 
+    /**
+     * compareUnique method compares two arrays and returns single array of unique elements in the first array
+     * @param arrayToPrintUnique one of two integer arrays to compare, unique elements will be printed from this array
+     * @param arrayToCompare two of two integer arrays to compare,
+     * @return unique array of unique integer elements in first array
+     */
+    private static int[] compareUnique(int[] arrayToPrintUnique, int[] arrayToCompare) {
+        int[] common = compareCommon(arrayToPrintUnique, arrayToCompare); //overload method for optional common param?
+        int arrayLength = (arrayToPrintUnique.length) - (common.length);
+        int[] unique = new int[arrayLength];
+        boolean uniqueEl = true;
+        int k = 0;
 
+        for(int i : arrayToPrintUnique){
+            for(int j : common){
+                if(i == j) {
+                    uniqueEl = false;
+                    break;
+                }
+                if (uniqueEl) {
+                    if (!dupeInput(i, unique)) {
+                        if (k < unique.length) {
+                            unique[k] = i;
+                            k++;
+                        }
+                    }
+                }
+                uniqueEl = true;
+            }
+
+        }
+        return unique;
 
     }
+
 
 
 }
